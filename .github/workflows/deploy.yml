@@ -75,8 +75,10 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Trigger Coolify webhook
+        env:
+          WEBHOOK_URL: ${{ secrets.COOLIFY_WEBHOOK_URL }}
         run: |
-          curl -fsSL "${{ secrets.COOLIFY_WEBHOOK_URL }}" \
+          curl -fsSL "$WEBHOOK_URL" \
             && echo "Webhook OK" \
             || { echo "Webhook FAILED"; exit 1; }
 
