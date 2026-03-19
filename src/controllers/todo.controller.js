@@ -4,8 +4,8 @@ const getAllTodos = async (req, res) => {
   const { completed, priority, page = 1, limit = 10 } = req.query;
   const filter = {};
 
-  if (completed !== undefined) filter.completed = completed === 'true';
-  if (priority) filter.priority = priority;
+  if (completed !== undefined) { filter.completed = completed === 'true'; }
+  if (priority) { filter.priority = priority; }
 
   const skip = (parseInt(page) - 1) * parseInt(limit);
   const [todos, total] = await Promise.all([
