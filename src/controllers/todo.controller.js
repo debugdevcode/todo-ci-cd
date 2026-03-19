@@ -67,4 +67,20 @@ const toggleTodo = async (req, res) => {
   res.json({ success: true, data: todo });
 };
 
-module.exports = { getAllTodos, getTodoById, createTodo, updateTodo, deleteTodo, toggleTodo };
+const getTodoStats = async (req, res) => {
+  const [total, completed] = await Promise.all([
+    Todo.countDocuments({}),
+    Todo.countDocuments({ completed: true })
+  ]);
+  
+  res.json({
+    success: true,
+    data: {
+      total,
+      completed,
+      pending: total - completed
+    }
+  });
+};
+
+module.exports = { getAllTodos, getTodoById, createTodo, updateTodo, deleteTodo, toggleTodo, getTodoStats };

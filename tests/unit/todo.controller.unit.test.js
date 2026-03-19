@@ -11,6 +11,7 @@ const {
   updateTodo,
   deleteTodo,
   toggleTodo,
+  getTodoStats
 } = require('../../src/controllers/todo.controller');
 
 // ── helpers ──────────────────────────────────────────────────────────────────
@@ -149,6 +150,31 @@ describe('deleteTodo', () => {
     const res = mockRes();
     await deleteTodo(req, res);
     expect(res.status).toHaveBeenCalledWith(404);
+  });
+});
+
+// ── getTodoStats ──────────────────────────────────────────────────────────────
+
+describe('getTodoStats', () => {
+  it('returns aggregated stats for todos', async () => {
+    Todo.countDocuments.mockImplementation((filter) => {
+      if (filter && filter.completed === true) { return Promise.resolve(4); } // 4 completed
+      return Promise.resolve(10); // 10 total
+    });
+    
+    const req = {};
+    const res = mockRes();
+    
+    await getTodoStats(req, res);
+    
+    expect(res.json).toHaveBeenCalledWith({
+      success: true,
+      data: {
+        total: 10,
+        completed: 4,
+        pending: 6
+      }
+    });
   });
 });
 

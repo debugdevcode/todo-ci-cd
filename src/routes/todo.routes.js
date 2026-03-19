@@ -7,11 +7,13 @@ const {
   updateTodo,
   deleteTodo,
   toggleTodo,
+  getTodoStats
 } = require('../controllers/todo.controller');
 const { validateCreateTodo, validateUpdateTodo, validateMongoId } = require('../middleware/validate');
 const { asyncHandler } = require('../middleware/errorHandler');
 
 router.get('/', asyncHandler(getAllTodos));
+router.get('/stats', asyncHandler(getTodoStats));
 router.get('/:id', validateMongoId, asyncHandler(getTodoById));
 router.post('/', validateCreateTodo, asyncHandler(createTodo));
 router.put('/:id', validateUpdateTodo, asyncHandler(updateTodo));
