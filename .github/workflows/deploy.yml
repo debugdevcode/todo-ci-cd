@@ -78,8 +78,19 @@ jobs:
         env:
           WEBHOOK_URL: ${{ secrets.COOLIFY_WEBHOOK_URL }}
         run: |
-          curl -fsSL "$WEBHOOK_URL" \
-            && echo "Webhook OK" \
-            || { echo "Webhook FAILED"; exit 1; }
+          echo "Sending webhook to Coolify..."
+          curl -s -w "\nHTTP_STATUS:%{http_code}\n" \
+            -H "User-Agent: GitHub-Actions" \
+            -H "Accept: application/json" \
+            "$WEBHOOK_URL" > /tmp/curl_response.txt || true
+            
+          cat /tmp/curl_response.txt
+          
+          if grep -q "HTTP_STATUS:20" /tmp/curl_response.txt; then
+            echo "Webhook OK"
+          else
+            echo "Webhook FAILED - Check the response above"
+            exit 1
+          fi
 
 
