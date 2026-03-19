@@ -77,11 +77,13 @@ jobs:
       - name: Trigger Coolify webhook
         env:
           WEBHOOK_URL: ${{ secrets.COOLIFY_WEBHOOK_URL }}
+          COOLIFY_TOKEN: ${{ secrets.COOLIFY_TOKEN }}
         run: |
           echo "Sending webhook to Coolify..."
           curl -s -w "\nHTTP_STATUS:%{http_code}\n" \
             -H "User-Agent: GitHub-Actions" \
             -H "Accept: application/json" \
+            -H "Authorization: Bearer $COOLIFY_TOKEN" \
             "$WEBHOOK_URL" > /tmp/curl_response.txt || true
             
           cat /tmp/curl_response.txt
